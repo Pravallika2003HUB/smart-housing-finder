@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero rounded-4 p-5 text-white mb-5">
+  <h1 class="display-5 fw-bold">Find a Place You Can Trust.</h1>
+  <p class="lead">Discover affordable PGs, hostels and rooms with verified listings and real user reviews.</p>
+  <form class="row g-2 bg-white p-3 rounded-3 mt-3" method="get" action="{% url 'properties:search' %}">
+    <div class="col-md-4"><input class="form-control" name="location" placeholder="Location (e.g. Hyderabad)"></div>
+    <div class="col-md-3"><input class="form-control" name="max_rent" type="number" placeholder="Max monthly rent"></div>
+    <div class="col-md-3">
+      <select class="form-select" name="property_type">
+        <option value="">Any type</option>
+        <option>PG</option><option>Hostel</option><option>Room</option><option>Apartment</option>
+      </select>
+    </div>
+    <div class="col-md-2 d-grid"><button class="btn btn-navy">Search</button></div>
+    <div class="col-12"><a class="btn btn-link px-0" href="{% url 'properties:create' %}">List Your Property</a></div>
+  </form>
+</section>
+
+<h2 class="h4 mb-3">Why Smart Housing Finder?</h2>
+<div class="row g-3 mb-5">
+  <div class="col-md-4"><div class="card h-100 p-3"><h6>Verified Listings</h6><p class="small text-muted mb-0">Our team checks listings before they show the verified badge.</p></div></div>
+  <div class="col-md-4"><div class="card h-100 p-3"><h6>Real Reviews</h6><p class="small text-muted mb-0">Ratings come from residents who actually stayed there.</p></div></div>
+  <div class="col-md-4"><div class="card h-100 p-3"><h6>Affordable Options</h6><p class="small text-muted mb-0">Compare rent and deposits side by side, no broker fees.</p></div></div>
+  <div class="col-md-6"><div class="card h-100 p-3"><h6>Easy Search</h6><p class="small text-muted mb-0">Filter by city, rent, type, gender preference and facilities.</p></div></div>
+  <div class="col-md-6"><div class="card h-100 p-3"><h6>Report Suspicious Listings</h6><p class="small text-muted mb-0">One click flags a listing for admin review.</p></div></div>
+</div>
+
+<h2 class="h4 mb-3">How It Works</h2>
+<ol class="row g-3 list-unstyled mb-5">
+  <li class="col-md-3"><div class="card p-3 h-100"><strong>1. Search</strong><p class="small text-muted mb-0">Enter your city and budget.</p></div></li>
+  <li class="col-md-3"><div class="card p-3 h-100"><strong>2. Compare</strong><p class="small text-muted mb-0">Check rent, deposit and facilities.</p></div></li>
+  <li class="col-md-3"><div class="card p-3 h-100"><strong>3. Check Reviews</strong><p class="small text-muted mb-0">Read what residents say.</p></div></li>
+  <li class="col-md-3"><div class="card p-3 h-100"><strong>4. Choose Your Stay</strong><p class="small text-muted mb-0">Contact the owner directly.</p></div></li>
+</ol>
+
+<h2 class="h4 mb-3">Featured verified stays</h2>
+<div class="row g-4 mb-5">
+  {% for item in featured %}{% include "properties/_card.html" %}{% empty %}
+    <p class="text-muted">No verified listings yet.</p>
+  {% endfor %}
+</div>
+
+<h2 class="h4 mb-3">What students say</h2>
+<div class="row g-3">
+  <div class="col-md-4"><div class="card p-3 h-100"><p class="small mb-2">"Found a PG near my college in two days without paying a broker."</p><strong class="small">Ananya, Hyderabad</strong></div></div>
+  <div class="col-md-4"><div class="card p-3 h-100"><p class="small mb-2">"Reviews saved me from a listing with fake photos."</p><strong class="small">Rahul, Bengaluru</strong></div></div>
+  <div class="col-md-4"><div class="card p-3 h-100"><p class="small mb-2">"As an owner I get genuine enquiries only."</p><strong class="small">Suresh, Visakhapatnam</strong></div></div>
+</div>
+{% endblock %}

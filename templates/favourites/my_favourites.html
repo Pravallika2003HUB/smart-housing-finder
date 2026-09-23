@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="h4 mb-3">My favourites</h1>
+<div class="row g-4">
+  {% for fav in favourites %}{% with item=fav.property %}{% include "properties/_card.html" %}{% endwith %}
+  {% empty %}<p class="text-muted">You have not saved any stay yet.</p>{% endfor %}
+</div>
+{% endblock %}

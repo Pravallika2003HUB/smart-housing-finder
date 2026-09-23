@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}{{ property.title }} - Smart Housing Finder{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    {% if property.image %}<img class="img-fluid rounded-3 mb-3" src="{{ property.image.url }}" alt="{{ property.title }}">{% endif %}
+    <h1 class="h3">{{ property.title }}</h1>
+    <p class="text-muted">{{ property.location }} &middot; {{ property.address }}</p>
+    <p>
+      {% if property.is_verified %}<span class="badge text-bg-success">&#10003; Verified Listing</span>
+      {% else %}<span class="badge text-bg-secondary">Verification Pending</span>{% endif %}
+      <span class="badge text-bg-light border">{{ property.property_type }}</span>
+      <span class="badge text-bg-light border">For {{ property.gender_preference }}</span>
+    </p>
+    <p class="lead">&#8377;{{ property.monthly_rent }}/month &middot; <span class="fs-6 text-muted">Deposit &#8377;{{ property.security_deposit }}</span></p>
+    <p>{{ property.description|linebreaks }}</p>
+    <h2 class="h6">Facilities</h2>
+    <ul>
+      <li>Food: {{ property.food_available|yesno:"Available,Not available" }}</li>
+      <li>WiFi: {{ property.wifi_available|yesno:"Available,Not available" }}</li>
+      <li>Parking: {{ property.parking_available|yesno:"Available,Not available" }}</li>
+      <li>Laundry: {{ property.laundry_available|yesno:"Available,Not available" }}</li>
+      <li>Furnished: {{ property.furnished|yesno:"Yes,No" }}</li>
+    </ul>
+
+    <h2 class="h5 mt-4">Reviews ({{ property.review_count }}) &middot; {{ property.average_rating }} &#9733;</h2>
+    {% for review in reviews %}
+      <div class="card p-3 mb-2">
+        <strong>{{ review.user.full_name }}</strong>
+        <div class="small text-warning">{{ review.rating }} &#9733;</div>
+        <p class="mb-0 small">{{ review.comment }}</p>
+      </div>
+    {% empty %}<p class="text-muted">No reviews yet.</p>{% endfor %}
+  </div>
+
+  <aside class="col-lg-4">
+    <div class="card p-3 mb-3">
+      <h2 class="h6">Owner</h2>
+      <p class="mb-1">{{ property.owner.full_name }}</p>
+      <p class="small text-muted">Contact: {{ property.contact_number }}</p>
+      {% if user.is_authenticated %}
+        <form method="post" action="{% url 'favourites:toggle' property.pk %}">{% csrf_token %}
+          <button class="btn btn-outline-danger w-100 mb-2">{% if is_favourite %}&#9829; Saved{% else %}&#9825; Add to Favourites{% endif %}</button>
+        </form>
+        <a class="btn btn-teal w-100 mb-2" href="tel:{{ property.contact_number }}">Contact Owner</a>
+      {% else %}
+        <a class="btn btn-navy w-100" href="{% url 'accounts:login' %}">Login to save or review</a>
+      {% endif %}
+    </div>
+
+    {% if user.is_authenticated %}
+    <div class="card p-3 mb-3">
+      <h2 class="h6">Write a review</h2>
+      <form method="post" action="{% url 'reviews:add' property.pk %}">{% csrf_token %}
+        {{ review_form.as_p }}
+        <button class="btn btn-navy w-100">Submit review</button>
+      </form>
+    </div>
+    <div class="card p-3">
+      <h2 class="h6">Report this property</h2>
+      <form method="post" action="{% url 'reports:add' property.pk %}">{% csrf_token %}
+        {{ report_form.as_p }}
+        <button class="btn btn-outline-danger w-100">Submit report</button>
+      </form>
+    </div>
+    {% endif %}
+  </aside>
+</div>
+{% endblock %}

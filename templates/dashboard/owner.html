@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="h4">Welcome back, {{ user.full_name }}</h1>
+<p class="text-muted">Owner account</p>
+<div class="row g-3 mb-4">
+  <div class="col-md-3"><div class="card p-3"><div class="h3 mb-0">{{ total }}</div><div class="small text-muted">Total properties</div></div></div>
+  <div class="col-md-3"><div class="card p-3"><div class="h3 mb-0">{{ verified }}</div><div class="small text-muted">Verified</div></div></div>
+  <div class="col-md-3"><div class="card p-3"><div class="h3 mb-0">{{ pending }}</div><div class="small text-muted">Pending verification</div></div></div>
+  <div class="col-md-3"><div class="card p-3"><div class="h3 mb-0">{{ reviews }}</div><div class="small text-muted">Reviews received</div></div></div>
+</div>
+<a class="btn btn-navy mb-3" href="{% url 'properties:create' %}">Add property</a>
+<table class="table bg-white align-middle">
+  <thead><tr><th>Property</th><th>Location</th><th>Rent</th><th>Status</th><th>Reviews</th><th>Actions</th></tr></thead>
+  <tbody>
+  {% for item in listings %}
+    <tr>
+      <td><a href="{% url 'properties:detail' item.pk %}">{{ item.title }}</a></td>
+      <td>{{ item.location }}</td><td>&#8377;{{ item.monthly_rent }}</td>
+      <td>{% if item.is_verified %}<span class="badge text-bg-success">Verified</span>{% else %}<span class="badge text-bg-secondary">Pending</span>{% endif %}</td>
+      <td>{{ item.review_count }}</td>
+      <td>
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'properties:edit' item.pk %}">Edit</a>
+        <form class="d-inline" method="post" action="{% url 'properties:delete' item.pk %}">{% csrf_token %}<button class="btn btn-sm btn-outline-danger">Delete</button></form>
+      </td>
+    </tr>
+  {% empty %}<tr><td colspan="6" class="text-muted">No properties yet.</td></tr>{% endfor %}
+  </tbody>
+</table>
+<h2 class="h5 mt-4">Reports on my properties</h2>
+{% for r in reports %}<div class="card p-3 mb-2"><strong>{{ r.property.title }} - {{ r.reason }}</strong><div class="small text-muted">{{ r.description }} ({{ r.status }})</div></div>{% empty %}<p class="text-muted">No reports.</p>{% endfor %}
+{% endblock %}

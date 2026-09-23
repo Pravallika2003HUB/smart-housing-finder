@@ -1,0 +1,36 @@
+<div class="col-md-6 col-lg-4">
+  <div class="card h-100 shadow-sm">
+    {% if item.image %}
+      <img src="{{ item.image.url }}" class="card-img-top card-photo" alt="{{ item.title }}">
+    {% else %}
+      <div class="card-img-top card-photo bg-secondary-subtle d-flex align-items-center justify-content-center text-muted">No photo yet</div>
+    {% endif %}
+    <div class="card-body d-flex flex-column">
+      <div class="d-flex justify-content-between align-items-start">
+        <h5 class="card-title mb-1">{{ item.title }}</h5>
+        <span class="badge text-bg-light border">{{ item.property_type }}</span>
+      </div>
+      <p class="text-muted small mb-2">{{ item.location }}</p>
+      <p class="mb-2">
+        {% if item.is_verified %}
+          <span class="badge text-bg-success">&#10003; Verified Listing</span>
+        {% else %}
+          <span class="badge text-bg-secondary">Verification Pending</span>
+        {% endif %}
+      </p>
+      <p class="small text-muted mb-2">
+        {% if item.review_count %}{{ item.average_rating }} &#9733; ({{ item.review_count }} reviews){% else %}No reviews yet{% endif %}
+      </p>
+      <ul class="list-inline small text-muted">
+        {% if item.wifi_available %}<li class="list-inline-item">WiFi</li>{% endif %}
+        {% if item.food_available %}<li class="list-inline-item">Food</li>{% endif %}
+        {% if item.parking_available %}<li class="list-inline-item">Parking</li>{% endif %}
+        {% if item.furnished %}<li class="list-inline-item">Furnished</li>{% endif %}
+      </ul>
+      <div class="mt-auto d-flex justify-content-between align-items-center">
+        <strong>&#8377;{{ item.monthly_rent }}<span class="text-muted fw-normal small">/month</span></strong>
+        <a class="btn btn-sm btn-navy" href="{% url 'properties:detail' item.pk %}">View Details</a>
+      </div>
+    </div>
+  </div>
+</div>

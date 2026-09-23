@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="h4">Admin console</h1>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3"><div class="card p-3"><div class="h3 mb-0">{{ total_users }}</div><div class="small text-muted">Users ({{ students }} students / {{ owners }} owners)</div></div></div>
+  <div class="col-6 col-md-3"><div class="card p-3"><div class="h3 mb-0">{{ properties }}</div><div class="small text-muted">{{ verified }} verified / {{ pending }} pending</div></div></div>
+  <div class="col-6 col-md-3"><div class="card p-3"><div class="h3 mb-0">{{ reviews }}</div><div class="small text-muted">Reviews</div></div></div>
+  <div class="col-6 col-md-3"><div class="card p-3"><div class="h3 mb-0">{{ pending_reports }}</div><div class="small text-muted">Pending reports</div></div></div>
+</div>
+
+<h2 class="h5">Listings</h2>
+<table class="table bg-white align-middle">
+  <thead><tr><th>Property</th><th>Owner</th><th>Location</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>
+  {% for item in listings %}
+    <tr>
+      <td><a href="{% url 'properties:detail' item.pk %}">{{ item.title }}</a></td>
+      <td>{{ item.owner.full_name }}</td><td>{{ item.location }}</td>
+      <td>{% if item.is_verified %}<span class="badge text-bg-success">Verified</span>{% else %}<span class="badge text-bg-secondary">Pending</span>{% endif %}</td>
+      <td>
+        <form class="d-inline" method="post" action="{% url 'properties:moderate' item.pk 'verify' %}">{% csrf_token %}<button class="btn btn-sm btn-success">Verify</button></form>
+        <form class="d-inline" method="post" action="{% url 'properties:moderate' item.pk 'reject' %}">{% csrf_token %}<button class="btn btn-sm btn-outline-secondary">Reject</button></form>
+        <form class="d-inline" method="post" action="{% url 'properties:delete' item.pk %}">{% csrf_token %}<button class="btn btn-sm btn-outline-danger">Delete</button></form>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<h2 class="h5 mt-4">Reports</h2>
+<table class="table bg-white align-middle">
+  <thead><tr><th>Property</th><th>Reason</th><th>Reported by</th><th>Status</th><th>Set status</th></tr></thead>
+  <tbody>
+  {% for r in reports %}
+    <tr>
+      <td>{{ r.property.title }}</td><td>{{ r.reason }}</td><td>{{ r.user.full_name }}</td><td>{{ r.status }}</td>
+      <td>
+        {% for value, label in r.STATUS_CHOICES %}
+          <form class="d-inline" method="post" action="{% url 'reports:status' r.pk value %}">{% csrf_token %}<button class="btn btn-sm btn-outline-secondary">{{ label }}</button></form>
+        {% endfor %}
+      </td>
+    </tr>
+  {% empty %}<tr><td colspan="5" class="text-muted">No reports.</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% endblock %}

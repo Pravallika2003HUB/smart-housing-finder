@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="h4 mb-3">My reviews</h1>
+{% for review in reviews %}
+  <div class="card p-3 mb-2">
+    <a href="{% url 'properties:detail' review.property.pk %}"><strong>{{ review.property.title }}</strong></a>
+    <div class="small text-warning">{{ review.rating }} &#9733;</div>
+    <p class="small mb-2">{{ review.comment }}</p>
+    <form method="post" action="{% url 'reviews:delete' review.pk %}">{% csrf_token %}<button class="btn btn-sm btn-outline-danger">Delete review</button></form>
+  </div>
+{% empty %}<p class="text-muted">You have not written any review yet.</p>{% endfor %}
+{% endblock %}

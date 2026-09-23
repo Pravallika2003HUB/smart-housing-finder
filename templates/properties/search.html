@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row g-4">
+  <aside class="col-lg-3">
+    <form class="card p-3" method="get">
+      <h6>Filters</h6>
+      <input class="form-control mb-2" name="location" placeholder="Location" value="{{ filters.location }}">
+      <div class="d-flex gap-2 mb-2">
+        <input class="form-control" type="number" name="min_rent" placeholder="Min" value="{{ filters.min_rent }}">
+        <input class="form-control" type="number" name="max_rent" placeholder="Max" value="{{ filters.max_rent }}">
+      </div>
+      <select class="form-select mb-2" name="property_type">
+        <option value="">Any type</option>
+        {% for value, label in types %}<option value="{{ value }}" {% if filters.property_type == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+      <select class="form-select mb-2" name="gender">
+        <option value="">Any gender</option>
+        {% for value, label in genders %}<option value="{{ value }}" {% if filters.gender == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+      <div class="form-check"><input class="form-check-input" type="checkbox" name="wifi_available" id="f1" {% if filters.wifi_available %}checked{% endif %}><label class="form-check-label" for="f1">WiFi</label></div>
+      <div class="form-check"><input class="form-check-input" type="checkbox" name="food_available" id="f2" {% if filters.food_available %}checked{% endif %}><label class="form-check-label" for="f2">Food</label></div>
+      <div class="form-check"><input class="form-check-input" type="checkbox" name="parking_available" id="f3" {% if filters.parking_available %}checked{% endif %}><label class="form-check-label" for="f3">Parking</label></div>
+      <div class="form-check"><input class="form-check-input" type="checkbox" name="furnished" id="f4" {% if filters.furnished %}checked{% endif %}><label class="form-check-label" for="f4">Furnished</label></div>
+      <div class="form-check mb-2"><input class="form-check-input" type="checkbox" name="verified_only" id="f5" {% if filters.verified_only %}checked{% endif %}><label class="form-check-label" for="f5">Verified only</label></div>
+      <select class="form-select mb-3" name="sort">
+        <option value="newest" {% if filters.sort == 'newest' %}selected{% endif %}>Newest first</option>
+        <option value="rent_asc" {% if filters.sort == 'rent_asc' %}selected{% endif %}>Rent: low to high</option>
+        <option value="rent_desc" {% if filters.sort == 'rent_desc' %}selected{% endif %}>Rent: high to low</option>
+      </select>
+      <button class="btn btn-navy w-100">Apply filters</button>
+    </form>
+  </aside>
+  <div class="col-lg-9">
+    <h1 class="h4 mb-3">{{ properties|length }} stay(s) found</h1>
+    <div class="row g-4">
+      {% for item in properties %}{% include "properties/_card.html" %}{% empty %}
+        <p class="text-muted">No properties found for your search.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

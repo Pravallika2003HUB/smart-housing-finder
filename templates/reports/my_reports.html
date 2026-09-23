@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="h4 mb-3">My reports</h1>
+{% for r in reports %}
+  <div class="card p-3 mb-2">
+    <strong>{{ r.property.title }}</strong>
+    <div class="small text-muted">{{ r.reason }} - {{ r.description }}</div>
+    <div><span class="badge text-bg-light border">{{ r.status }}</span></div>
+  </div>
+{% empty %}<p class="text-muted">You have not reported any property.</p>{% endfor %}
+{% endblock %}

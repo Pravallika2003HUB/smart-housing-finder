@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card p-4 mx-auto" style="max-width:560px">
+  <h1 class="h4">Contact us</h1>
+  <form method="post">{% csrf_token %}
+    <div class="mb-2"><label class="form-label">Your name</label><input class="form-control" name="name" required></div>
+    <div class="mb-2"><label class="form-label">Email</label><input class="form-control" type="email" name="email" required></div>
+    <div class="mb-3"><label class="form-label">Message</label><textarea class="form-control" name="message" rows="4" required></textarea></div>
+    <button class="btn btn-navy">Send message</button>
+  </form>
+</div>
+{% endblock %}
